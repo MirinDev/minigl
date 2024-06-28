@@ -2,24 +2,28 @@
 
 int edge_cross(vec2i_t a, vec2i_t b, vec2i_t p)
 {
-    vec2i_t ab = {.x = b.x - a.x, .y = b.y - a.y};
-    vec2i_t ap = {.x = p.x - a.x, .y = p.y - a.y};
+    vec2i_t ab = {b.x - a.x, b.y - a.y};
+    vec2i_t ap = {p.x - a.x, p.y - a.y};
     
     return ab.x * ap.y - ab.y * ap.x;
 }
 
-void raster_triangle(frame_t* frame, triangle_2d_t tri)
+void raster_triangle(frame_t* frame, zframe_t* zframe, triangle_3d_t tri, fragment_shader shader)
 {
-    float abc = edge_cross(tri.v0, tri.v1, tri.v2);
+    vec2i_t v0 = {tri.v0.x, tri.v0.y};
+    vec2i_t v1 = {tri.v1.x, tri.v1.y};
+    vec2i_t v2 = {tri.v2.x, tri.v2.y};
+    
+    float abc = edge_cross(v0, v1, v2);
 
-    vec2i_t p = {.x = 0, .y = 0};
-    float pbc = edge_cross(p, tri.v1, tri.v2);
-    float apc = edge_cross(tri.v0, p, tri.v2);
-    float abp = edge_cross(tri.v0, tri.v1, p);
+    vec2i_t p = {0, 0};
+    float pbc = edge_cross(p, v1, v2);
+    float apc = edge_cross(v0, p, v2);
+    float abp = edge_cross(v0, v1, p);
 
-    vec2i_t pbc_delta = {.x = tri.v2.x - tri.v1.x, .y = tri.v1.y - tri.v2.y};
-    vec2i_t apc_delta = {.x = tri.v0.x - tri.v2.x, .y = tri.v2.y - tri.v0.y};
-    vec2i_t abp_delta = {.x = tri.v1.x - tri.v0.x, .y = tri.v0.y - tri.v1.y};
+    vec2i_t pbc_delta = {v2.x - v1.x, v1.y - v2.y};
+    vec2i_t apc_delta = {v0.x - v2.x, v2.y - v0.y};
+    vec2i_t abp_delta = {v1.x - v0.x, v0.y - v1.y};
 
     for (size_t y = 0; y < frame->height; y++)
     {
@@ -29,13 +33,22 @@ void raster_triangle(frame_t* frame, triangle_2d_t tri)
 
         for (size_t x = 0; x < frame->width; x++)
         {
-            if (a >= 0 && b >= 0 && g >= 0)
-            {
-                float alpha = (float)a / (float)abc;
-                float beta = (float)b / (float)abc;
-                float gama = (float)g / (float)abc;
+            float alpha = (float)a / (float)abc;
+            float beta = (float)b / (float)abc;
+            float gama = (float)g / (float)abc;
 
-                frame->data[y * frame->width + x] = '#';
+            if (alpha >= 0 && beta >= 0 && gama >= 0)
+            {
+                float z = tri.v0.z * alpha + tri.v1.z * beta + tri.v2.z * gama;
+
+                if (z >= 0.0f && z < zframe->data[y * zframe->width + x])
+                {
+                    char ch = ' ';
+                    shader(&ch, alpha, beta, gama);
+
+                    zframe->data[y * zframe->width + x] = z;
+                    frame->data[y * frame->width + x] = ch;
+                }
             }
             
             a += pbc_delta.y;

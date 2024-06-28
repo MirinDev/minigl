@@ -5,12 +5,13 @@
 
 typedef struct poly_s
 {
-    triangle_3d_t* data;
+    vec3_t* data;
+    unsigned int* inds;
     int n;
 } poly_t;
 
-typedef void vertex_shader(vec3_t* vert);
+typedef void vertex_shader(vec4_t* vert, int i, int j);
 
-void render_poly(frame_t* frame, poly_t* poly, vertex_shader shader);
+void render_poly(frame_t* frame, zframe_t* zframe, poly_t* poly, vertex_shader v_shader, fragment_shader f_shader);
 
 #endif

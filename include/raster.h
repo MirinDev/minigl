@@ -3,14 +3,10 @@
 
 #include "math/vec2.h"
 #include "math/vec3.h"
+#include "math/vec4.h"
+#include "math/mat4.h"
 
 #include <frame.h>
-
-typedef union triangle_2d_u
-{
-    struct{vec2i_t v0, v1, v2;};
-    struct{vec2i_t data[3];};
-} triangle_2d_t;
 
 typedef union triangle_3d_u
 {
@@ -18,6 +14,8 @@ typedef union triangle_3d_u
     struct{vec3_t data[3];};
 } triangle_3d_t;
 
-void raster_triangle(frame_t* frame_t, triangle_2d_t tri);
+typedef void fragment_shader(char* ch, float a, float b, float g);
+
+void raster_triangle(frame_t* frame, zframe_t* zframe, triangle_3d_t tri, fragment_shader shader);
 
 #endif

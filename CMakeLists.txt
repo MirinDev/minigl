@@ -13,3 +13,4 @@ set(include_dirs
 
 add_executable(${PROJECT_NAME} ${source})
 include_directories(${include_dirs})
+target_link_libraries(${PROJECT_NAME} m ncurses)

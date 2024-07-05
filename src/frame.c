@@ -30,17 +30,13 @@ void present_frame(frame_t* frame)
 {
     if (frame == NULL) return;
 
-    char line[frame->width];
-    line[frame->width] = '\0';
-
     for (int y = 0; y < frame->height; y++)
     {
-        move(y, 0);
-        memcpy(line, frame->data + y * frame->width * sizeof(char), frame->width * sizeof(char));
-        printw("%s\n", line);
+        gotoxy(0, y);
+        fwrite(frame->data + y * frame->width, sizeof(char), frame->width, stdout);
     }
 
-    refresh();
+    fflush(stdout);
 }
 
 zframe_t* create_zframe(int width, int height)

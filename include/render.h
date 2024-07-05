@@ -7,7 +7,7 @@ typedef struct poly_s
 {
     vec3_t* data;
     unsigned int* inds;
-    int n;
+    unsigned int n;
 } poly_t;
 
 typedef void vertex_shader(vec4_t* vert, int i, int j);

@@ -36,10 +36,10 @@ vec4_t multiply_matrix_4x4_vector4(mat4_t matrix, vec4_t vector)
 {
     vec4_t v;
 
-    v.x = vector.x * matrix[0] + vector.y * matrix[1] + vector.z * matrix[2] + vector.w * matrix[3];
-    v.y = vector.x * matrix[4] + vector.y * matrix[5] + vector.z * matrix[6] + vector.w * matrix[7];
-    v.z = vector.x * matrix[8] + vector.y * matrix[9] + vector.z * matrix[10] + vector.w * matrix[11];
-    v.w = vector.x * matrix[12] + vector.y * matrix[13] + vector.z * matrix[14] + vector.w * matrix[15];
+    v.x = vector.x * matrix.data[0] + vector.y * matrix.data[1] + vector.z * matrix.data[2] + vector.w * matrix.data[3];
+    v.y = vector.x * matrix.data[4] + vector.y * matrix.data[5] + vector.z * matrix.data[6] + vector.w * matrix.data[7];
+    v.z = vector.x * matrix.data[8] + vector.y * matrix.data[9] + vector.z * matrix.data[10] + vector.w * matrix.data[11];
+    v.w = vector.x * matrix.data[12] + vector.y * matrix.data[13] + vector.z * matrix.data[14] + vector.w * matrix.data[15];
 
     return v;
 }

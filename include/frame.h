@@ -1,11 +1,10 @@
 #ifndef FRAME_H_
 #define FRAME_H_
 
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include <ncurses.h>
+#include "terminal.h"
 
 typedef struct 
 {

@@ -18,6 +18,7 @@ void exit_terminal()
 {
     tcsetattr(STDIN_FILENO, TCSANOW, &original_terminal);
     set_cursor_color(0);
+    clear_terminal();
 }
 
 int kbhit()
@@ -65,6 +66,11 @@ void set_terminal_title(char* title)
 void set_cursor_color(int color)
 {
     printf("\e[0;%dm", color);
+}
+
+void set_background_color(int color)
+{
+    printf("\e[%dm", color + 10);
 }
 
 #else
@@ -123,6 +129,12 @@ void set_cursor_color(int color)
 {
     HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
     SetConsoleTextAttribute(handle, color);
+}
+
+void set_background_color(int color)
+{
+    HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleTextAttribute(handle, color + 16);
 }
 
 #endif

@@ -30,7 +30,7 @@ int main(int argc, char* argv[])
     frame_buffer = create_frame(64, 32);
     zbuffer = create_zframe(64, 32);
 
-    poly = read_obj("./assets/cube.obj");
+    poly = read_obj("./assets/yememi.obj");
 
     mat4_t proj = perspective(deg_to_rad(90.0f), 1.0f, 0.1f, 100.0f);
     //mat4_t proj = orthographic(-1.0f, 1.0f, 1.0f, -1.0f, 0.1f, 100.0f);
@@ -38,12 +38,14 @@ int main(int argc, char* argv[])
     cam = multiply_matrix_4x4(proj, view);
 
     model = identity_matrix_4x4();
-    model = translate_matrix_4x4(model, (vec3_t){0.0f, 0.0f, -4.0f});
+    model = translate_matrix_4x4(model, (vec3_t){0.0f, 1.0f, -1.5f});
+    //model = translate_matrix_4x4(model, (vec3_t){0.0f, 4.0f, -6.0f});
     //model = scale_matrix_4x4(model, (vec3_t){0.1f, 0.1f, 0.1f});
     model = rotate_with_deg_matrix_4x4(model, (vec3_t){180.0, 0.0, 0.0});
 
     clear_terminal();
     set_cursor_color(cyan);
+    set_background_color(gray);
 
     int loop = 1;
 
@@ -73,7 +75,6 @@ int main(int argc, char* argv[])
     delete_zframe(zbuffer);
     delete_frame(frame_buffer);
 
-    //set_cursor_color(0);
     clear_terminal();
     show_cursor();
     exit_terminal();

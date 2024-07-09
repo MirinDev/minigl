@@ -20,8 +20,25 @@
         blue = 34,
         purple = 35,
         cyan = 36,
-        white = 37
+        white = 37,
+
+        gray = 90,
+        bright_red = 91,
+        light_green = 92,
+        bright_yellow = 93,
+        light_blue = 94,
+        bright_purple = 95,
+        bright_cyan = 96,
+        bright_white = 97,
     };
+
+    /*enum modes
+    {
+        normal = 0,
+        bold = 1,
+        italic = 3,
+        underline = 4,
+    };*/
 #else
     #include <windows.h>
     #include <conio.h>
@@ -36,6 +53,15 @@
         purple = 5,
         yellow = 6,
         white = 7,
+
+        gray = 8,
+        light_blue = 9,
+        light_green = 10,
+        bright_cyan = 11,
+        bright_red = 12,
+        bright_purple = 13,
+        bright_yellow = 14,
+        bright_white = 15,
     };
 #endif
 
@@ -50,6 +76,8 @@ void show_cursor();
 void clear_terminal();
 
 void set_cursor_color(int color);
+
+void set_background_color(int color);
 
 void set_terminal_title(char* title);
 

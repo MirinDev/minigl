@@ -8,6 +8,8 @@ float edge_cross(vec2_t a, vec2_t b, vec2_t p)
     return ab.x * ap.y - ab.y * ap.x;
 }
 
+CULLIN_FACE_t ACTUAL_CULLIN = CULLIN_FACE_NONE;
+
 void raster_triangle(frame_t* frame, triangle_3d_t tri, fragment_shader shader)
 {
     int min_x = (int)clampf(minf(minf(tri.v0.x, tri.v1.x), tri.v2.x), 0, frame->width - 1);
@@ -21,6 +23,23 @@ void raster_triangle(frame_t* frame, triangle_3d_t tri, fragment_shader shader)
     vec2_t v2 = {tri.v2.x, tri.v2.y};
     
     float abc = edge_cross(v0, v1, v2);
+
+    switch (ACTUAL_CULLIN)
+    {
+    case CULLIN_FACE_NONE:
+        break;
+    
+    case CULLIN_FACE_FRONT:
+        if (abc > 0.0f) return;
+        break;
+    
+    case CULLIN_FACE_BACK:
+        if (abc < 0.0f) return;
+        break;
+    
+    default:
+        break;
+    }
 
     vec2_t p = {min_x, min_y};
     float pbc = edge_cross(p, v1, v2);

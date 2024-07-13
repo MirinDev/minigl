@@ -26,5 +26,6 @@ void present_frame(frame_t* frame);
 zframe_t* create_zframe(int width, int height);
 void delete_zframe(zframe_t* zframe);
 void clear_zframe(zframe_t* zframe);
+void present_zframe(zframe_t* zframe);
 
 #endif

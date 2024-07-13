@@ -65,3 +65,17 @@ void clear_zframe(zframe_t* zframe)
     for (int i = 0; i < zframe->width * zframe->height; i++)
         zframe->data[i] = 1.0f;
 }
+
+void present_zframe(zframe_t* zframe)
+{
+    if (zframe == NULL) return;
+
+    for (int y = 0; y < zframe->height; y++)
+    {
+        gotoxy(0, y);
+        for (int x = 0; x < zframe->width; x++)
+            printf("%.2f ", *(zframe->data + y * zframe->width + x));
+    }
+
+    fflush(stdout);
+}

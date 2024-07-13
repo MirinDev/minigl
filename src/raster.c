@@ -8,28 +8,13 @@ float edge_cross(vec2_t a, vec2_t b, vec2_t p)
     return ab.x * ap.y - ab.y * ap.x;
 }
 
-float minf(float a, float b)
-{
-    return a < b ? a : b;
-}
-
-float maxf(float a, float b)
-{
-    return a > b ? a : b;
-}
-
-float clampf(float a, float b, float c)
-{
-    return a < b ? b : a > c ? c : a;
-}
-
 void raster_triangle(frame_t* frame, zframe_t* zframe, triangle_3d_t tri, fragment_shader shader)
 {
-    int min_x = (int)clampf(minf(minf(tri.v0.x, tri.v1.x), tri.v2.x), 0, frame->width);
-    int min_y = (int)clampf(minf(minf(tri.v0.y, tri.v1.y), tri.v2.y), 0, frame->height);
+    int min_x = (int)clampf(minf(minf(tri.v0.x, tri.v1.x), tri.v2.x), 0, zframe->width - 1);
+    int min_y = (int)clampf(minf(minf(tri.v0.y, tri.v1.y), tri.v2.y), 0, zframe->height - 1);
 
-    int max_x = (int)clampf(maxf(maxf(tri.v0.x, tri.v1.x), tri.v2.x), 0, frame->width);
-    int max_y = (int)clampf(maxf(maxf(tri.v0.y, tri.v1.y), tri.v2.y), 0, frame->height);
+    int max_x = (int)clampf(maxf(maxf(tri.v0.x, tri.v1.x), tri.v2.x), 0, zframe->width - 1);
+    int max_y = (int)clampf(maxf(maxf(tri.v0.y, tri.v1.y), tri.v2.y), 0, zframe->height - 1);
 
     vec2_t v0 = {tri.v0.x, tri.v0.y};
     vec2_t v1 = {tri.v1.x, tri.v1.y};
@@ -62,13 +47,16 @@ void raster_triangle(frame_t* frame, zframe_t* zframe, triangle_3d_t tri, fragme
             {
                 float z = tri.v0.z * alpha + tri.v1.z * beta + tri.v2.z * gama;
 
-                if (z >= 0.0f && z < zframe->data[y * zframe->width + x])
+                if (z > -1.0f && z < zframe->data[y * zframe->width + x])
                 {
-                    char ch = ' ';
-                    shader(&ch, alpha, beta, gama);
-
                     zframe->data[y * zframe->width + x] = z;
-                    frame->data[y * frame->width + x] = ch;
+
+                    if (frame != NULL)
+                    {
+                        char ch = ' ';
+                        shader(&ch, alpha, beta, gama);
+                        frame->data[y * frame->width + x] = ch;
+                    }
                 }
             }
             

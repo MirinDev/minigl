@@ -2,7 +2,7 @@
 
 mat4_t identity_matrix_4x4()
 {
-    mat4_t matrix = {0};
+    mat4_t matrix = {0.0f};
 
     matrix.data[0] = 1.0f;
     matrix.data[5] = 1.0f;
@@ -25,38 +25,38 @@ mat4_t multiply_matrix_4x4(mat4_t m1, mat4_t m2)
 
 mat4_t orthographic(float left, float right, float top, float bottom, float near, float far)
 {
-    mat4_t matrix = {0};
+    mat4_t matrix = {0.0f};
 
-    matrix.data[0] = 1.0 / (right - left);
-    matrix.data[5] = 1.0 / (bottom - top);
-    matrix.data[10] = 1.0 / (far - near);
-    matrix.data[15] = 1.0;
+    matrix.data[0] = 2.0f / (right - left);
+    matrix.data[5] = 2.0f / (top - bottom);
+    matrix.data[10] = -2.0f / (far - near);
+    matrix.data[15] = 1.0f;
 
     matrix.data[3] = -(right + left) / (right - left);
-    matrix.data[7] = -(bottom + top) / (bottom - top);
-    matrix.data[11] = -near / (far - near);
+    matrix.data[7] = -(top + bottom) / (top - bottom);
+    matrix.data[11] = -(far + near) / (far - near);
 
     return matrix;
 }
 
 mat4_t perspective(float fov, float aspect, float near, float far)
 {
-    mat4_t matrix = {0};
+    mat4_t matrix = {0.0f};
 
     float ar = tanf(fov / 2.0f);
 
-    matrix.data[0] = 1.0 / (aspect * ar);
-    matrix.data[5] = 1.0 / ar;
+    matrix.data[0] = 1.0f / (aspect * ar);
+    matrix.data[5] = 1.0f / ar;
     matrix.data[10] = -(far + near) / (far - near);
-    matrix.data[11] = -(2 * far * near) / (far - near);
-    matrix.data[14] = -1.0;
+    matrix.data[11] = -(2.0f * far * near) / (far - near);
+    matrix.data[14] = -1.0f;
 
     return matrix;
 }
 
 mat4_t look_at(vec3_t pos, vec3_t right, vec3_t up, vec3_t front)
 {
-    mat4_t matrix = {0};
+    mat4_t matrix = {0.0f};
 
     return matrix;
 }

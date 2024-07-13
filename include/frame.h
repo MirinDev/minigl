@@ -9,23 +9,20 @@
 typedef struct 
 {
     char* data;
+    float* z_data;
     int width, height;
 } frame_t;
 
-typedef struct 
+typedef enum FRAME_BUFFER_e
 {
-    float* data;
-    int width, height;
-} zframe_t;
+    FRAME_CHARACTER_BUFFER = 0b01,
+    FRAME_DEPTH_BUFFER = 0b10,
+} FRAME_BUFFER_t;
 
-frame_t* create_frame(int width, int height);
+frame_t* create_frame(int width, int height, FRAME_BUFFER_t flags);
 void delete_frame(frame_t* frame);
+
 void clear_frame(frame_t* frame, char ch);
 void present_frame(frame_t* frame);
-
-zframe_t* create_zframe(int width, int height);
-void delete_zframe(zframe_t* zframe);
-void clear_zframe(zframe_t* zframe);
-void present_zframe(zframe_t* zframe);
 
 #endif

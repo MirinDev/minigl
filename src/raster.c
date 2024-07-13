@@ -8,13 +8,13 @@ float edge_cross(vec2_t a, vec2_t b, vec2_t p)
     return ab.x * ap.y - ab.y * ap.x;
 }
 
-void raster_triangle(frame_t* frame, zframe_t* zframe, triangle_3d_t tri, fragment_shader shader)
+void raster_triangle(frame_t* frame, triangle_3d_t tri, fragment_shader shader)
 {
-    int min_x = (int)clampf(minf(minf(tri.v0.x, tri.v1.x), tri.v2.x), 0, zframe->width - 1);
-    int min_y = (int)clampf(minf(minf(tri.v0.y, tri.v1.y), tri.v2.y), 0, zframe->height - 1);
+    int min_x = (int)clampf(minf(minf(tri.v0.x, tri.v1.x), tri.v2.x), 0, frame->width - 1);
+    int min_y = (int)clampf(minf(minf(tri.v0.y, tri.v1.y), tri.v2.y), 0, frame->height - 1);
 
-    int max_x = (int)clampf(maxf(maxf(tri.v0.x, tri.v1.x), tri.v2.x), 0, zframe->width - 1);
-    int max_y = (int)clampf(maxf(maxf(tri.v0.y, tri.v1.y), tri.v2.y), 0, zframe->height - 1);
+    int max_x = (int)clampf(maxf(maxf(tri.v0.x, tri.v1.x), tri.v2.x), 0, frame->width - 1);
+    int max_y = (int)clampf(maxf(maxf(tri.v0.y, tri.v1.y), tri.v2.y), 0, frame->height - 1);
 
     vec2_t v0 = {tri.v0.x, tri.v0.y};
     vec2_t v1 = {tri.v1.x, tri.v1.y};
@@ -45,18 +45,19 @@ void raster_triangle(frame_t* frame, zframe_t* zframe, triangle_3d_t tri, fragme
             
             if (alpha >= 0 && beta >= 0 && gama >= 0)
             {
-                float z = tri.v0.z * alpha + tri.v1.z * beta + tri.v2.z * gama;
-
-                if (z > -1.0f && z < zframe->data[y * zframe->width + x])
+                if (frame->z_data != NULL)
                 {
-                    zframe->data[y * zframe->width + x] = z;
+                    float z = tri.v0.z * alpha + tri.v1.z * beta + tri.v2.z * gama;
 
-                    if (frame != NULL)
-                    {
-                        char ch = ' ';
-                        shader(&ch, alpha, beta, gama);
-                        frame->data[y * frame->width + x] = ch;
-                    }
+                    if (z > -1.0f && z < frame->z_data[y * frame->width + x])
+                        frame->z_data[y * frame->width + x] = z;
+                }
+
+                if (frame->data != NULL)
+                {
+                    char ch = ' ';
+                    shader(&ch, alpha, beta, gama);
+                    frame->data[y * frame->width + x] = ch;
                 }
             }
             

@@ -1,9 +1,9 @@
 #include <render.h>
 
-void render_poly(frame_t* frame, zframe_t* zframe, poly_t* poly, vertex_shader v_shader, fragment_shader f_shader)
+void render_poly(frame_t* frame, poly_t* poly, vertex_shader v_shader, fragment_shader f_shader)
 {
-    float sx = (float)zframe->width / 2;
-    float sy = (float)zframe->height / 2;
+    float sx = (float)frame->width / 2;
+    float sy = (float)frame->height / 2;
 
     for (unsigned int i = 2; i < poly->n; i += 3)
     {
@@ -21,6 +21,6 @@ void render_poly(frame_t* frame, zframe_t* zframe, poly_t* poly, vertex_shader v
             ot.data[j].z = v.z;
         }
 
-        raster_triangle(frame, zframe, ot, f_shader);
+        raster_triangle(frame, ot, f_shader);
     }
 }

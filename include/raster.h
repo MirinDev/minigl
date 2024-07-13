@@ -17,6 +17,6 @@ typedef union triangle_3d_u
 
 typedef void fragment_shader(char* ch, float a, float b, float g);
 
-void raster_triangle(frame_t* frame, zframe_t* zframe, triangle_3d_t tri, fragment_shader shader);
+void raster_triangle(frame_t* frame, triangle_3d_t tri, fragment_shader shader);
 
 #endif

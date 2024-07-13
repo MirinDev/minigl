@@ -22,4 +22,6 @@ vec3_t cross_vector_3(vec3_t a, vec3_t b);
 
 vec3_t normalize_vector_3(vec3_t vector);
 
+float dot_vector_3(vec3_t a, vec3_t b);
+
 #endif

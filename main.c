@@ -36,7 +36,7 @@ void f_shader(char* ch, float a, float b, float g)
     vec.y = verts[0].y * a + verts[1].y * b + verts[2].y * g;
     vec.z = verts[0].z * a + verts[1].z * b + verts[2].z * g;
     vec.w = verts[0].w * a + verts[1].w * b + verts[2].w * g;
-    vec = divide_vector_4(vec, vec.w);
+    vec = divide_vector_4_float(vec, vec.w);
 
     vec.x = (vec.x + 1.0) * shadow_buffer->width / 2.0f;
     vec.y = (vec.y + 1.0) * shadow_buffer->height / 2.0f;

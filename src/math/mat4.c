@@ -28,21 +28,20 @@ mat4_t multiply_matrix_4x4(mat4_t m1, mat4_t m2)
 
 mat4_t create_transform_matrix_4x4(vec3_t translate, vec3_t rotate, vec3_t scale)
 {
-    mat4_t transform_matrix = {0.0f};
-    transform_matrix.data[15] = 1.0f;
+    mat4_t matrix = identity_matrix_4x4();
 
     //translate
 
-    if (translate != (vec3_t){0.0f, 0.0f, 0.0f})
+    if (translate.x != 0.0f || translate.y != 0.0f || translate.z != 0.0f)
     {
-        transform_matrix.data[3] = translate.x;
-        transform_matrix.data[7] = translate.y;
-        transform_matrix.data[11] = translate.z;
+        matrix.data[3] = translate.x;
+        matrix.data[7] = translate.y;
+        matrix.data[11] = translate.z;
     }
 
     //rotate
 
-    if (rotate != (vec3_t){0.0f, 0.0f, 0.0f})
+    if (rotate.x != 0.0f || rotate.y != 0.0f || rotate.z != 0.0f)
     {
         float cx = cosf(rotate.x);
         float sx = sinf(rotate.x);
@@ -53,21 +52,21 @@ mat4_t create_transform_matrix_4x4(vec3_t translate, vec3_t rotate, vec3_t scale
         float cz = cosf(rotate.z);
         float sz = sinf(rotate.z);
 
-        transform_matrix.data[0] = cy*cz;               transform_matrix.data[1] = -cy*sz;              transform_matrix.data[2] = sy;
-        transform_matrix.data[4] = sx*sy*cz + cx*sz;    transform_matrix.data[5] = -sx*sy*sz + cx*cz;   transform_matrix.data[6] = -sx*cy;
-        transform_matrix.data[8] = -cx*sy*cz + sx*sz;   transform_matrix.data[9] = cx*sy*sz + sx*cz;    transform_matrix.data[10] = cx*cy;
+        matrix.data[0] = cy*cz;               matrix.data[1] = -cy*sz;              matrix.data[2] = sy;
+        matrix.data[4] = sx*sy*cz + cx*sz;    matrix.data[5] = -sx*sy*sz + cx*cz;   matrix.data[6] = -sx*cy;
+        matrix.data[8] = -cx*sy*cz + sx*sz;   matrix.data[9] = cx*sy*sz + sx*cz;    matrix.data[10] = cx*cy;
     }
 
     //scale
 
-    if (scale != (vec3_t){1.0f, 1.0f, 1.0f})
+    if (scale.x != 1.0f || scale.y != 1.0f || scale.z != 1.0f)
     {
-        transform_matrix.data[0] *= scale.x;    transform_matrix.data[1] *= scale.y;    transform_matrix.data[2] *= scale.z;
-        transform_matrix.data[4] *= scale.x;    transform_matrix.data[5] *= scale.y;    transform_matrix.data[6] *= scale.z;
-        transform_matrix.data[8] *= scale.x;    transform_matrix.data[9] *= scale.y;    transform_matrix.data[10] *= scale.z;
+        matrix.data[0] *= scale.x;    matrix.data[1] *= scale.y;    matrix.data[2] *= scale.z;
+        matrix.data[4] *= scale.x;    matrix.data[5] *= scale.y;    matrix.data[6] *= scale.z;
+        matrix.data[8] *= scale.x;    matrix.data[9] *= scale.y;    matrix.data[10] *= scale.z;
     }
     
-    return transform_matrix;
+    return matrix;
 }
 
 mat4_t create_orthographic_matrix_4x4(float left, float right, float top, float bottom, float near, float far)
@@ -101,7 +100,7 @@ mat4_t create_perspective_matrix_4x4(float fov, float aspect, float near, float 
     return matrix;
 }
 
-mat4_t create_look_at_matrix_4x4(vec3_t pos, vec3_t right, vec3_t up, vec3_t front)
+mat4_t create_look_at_matrix_4x4(vec3_t eye, vec3_t target, vec3_t up)
 {
     mat4_t matrix = {0.0f};
 

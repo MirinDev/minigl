@@ -19,7 +19,7 @@ mat4_t create_transform_matrix_4x4(vec3_t translate, vec3_t rotate, vec3_t scale
 
 mat4_t create_orthographic_matrix_4x4(float left, float right, float top, float bottom, float near, float far);
 mat4_t create_perspective_matrix_4x4(float fov, float aspect, float near, float far);
-mat4_t create_look_at_matrix_4x4(vec3_t pos, vec3_t right, vec3_t up, vec3_t front);
+mat4_t create_look_at_matrix_4x4(vec3_t eye, vec3_t target, vec3_t up);
 
 mat4_t translate_matrix_4x4(mat4_t matrix, vec3_t vector);
 mat4_t scale_matrix_4x4(mat4_t matrix, vec3_t vector);

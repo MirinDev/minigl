@@ -5,10 +5,10 @@ vec4_t normalize_vector_4(vec4_t vector)
     float lenght = sqrtf(powf(vector.x, 2.0f) + powf(vector.y, 2.0f) + powf(vector.z, 2.0f) + powf(vector.w, 2.0f));
     if (lenght == 0.0f) return vector;
 
-    return divide_vector_4(vector, lenght);
+    return divide_vector_4_float(vector, lenght);
 }
 
-vec4_t divide_vector_4(vec4_t vector, float scale)
+vec4_t divide_vector_4_float(vec4_t vector, float scale)
 {
     vec4_t v;
 

@@ -104,11 +104,8 @@ mat4_t create_look_at_matrix_4x4(vec3_t eye, vec3_t target, vec3_t up)
 {
     mat4_t matrix = {0.0f};
 
-    vec3_t f = subtract_vector_3(target, eye);
+    vec3_t f = subtract_vector_3(eye, target);
     f = normalize_vector_3(f);
-    f.x = -f.x;
-    f.y = -f.y;
-    f.z = -f.z;
 
     vec3_t r = cross_vector_3(f, up);
     r = normalize_vector_3(r);

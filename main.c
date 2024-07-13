@@ -70,7 +70,7 @@ int main(int argc, char* argv[])
     shadow_buffer = create_frame(128, 128, FRAME_DEPTH_BUFFER);
 
     mat4_t light_proj = create_orthographic_matrix_4x4(-4.0f, 4.0f, 4.0f, -4.0f, 0.1f, 100.0f);
-    mat4_t light_view = create_transform_matrix_4x4((vec3_t){0.0f, 0.0f, -8.0f}, (vec3_t){deg_to_rad(-45.0f), deg_to_rad(-45.0f), 0.0f}, (vec3_t){1.0f, 1.0f, 1.0f});
+    mat4_t light_view = create_look_at_matrix_4x4((vec3_t){4.0f, 0.0f, 4.0f}, (vec3_t){0.0f, 0.0f, 0.0f}, (vec3_t){0.0f, 1.0f, 0.0f});
     light_cam = multiply_matrix_4x4(light_proj, light_view);
 
     model = create_transform_matrix_4x4((vec3_t){0.0f, 0.0f, 0.0f}, (vec3_t){deg_to_rad(180.0f), deg_to_rad(180.0f), 0.0f}, (vec3_t){2.0f, 2.0f, 2.0f});

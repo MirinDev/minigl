@@ -18,12 +18,59 @@ mat4_t multiply_matrix_4x4(mat4_t m1, mat4_t m2)
 
     for (int i = 0; i < 4; i++)
         for (int j = 0; j < 4; j++)
-            m.data[i * 4 + j] = m1.data[i * 4] * m2.data[j] + m1.data[i * 4 + 1] * m2.data[4 + j] + m1.data[i * 4 + 2] * m2.data[8 + j] + m1.data[i * 4 + 3] * m2.data[12 + j];
+            m.data[i * 4 + j] = m1.data[i * 4] * m2.data[j] + \
+                                m1.data[i * 4 + 1] * m2.data[4 + j] + \
+                                m1.data[i * 4 + 2] * m2.data[8 + j] + \
+                                m1.data[i * 4 + 3] * m2.data[12 + j];
     
     return m;
 }
 
-mat4_t orthographic(float left, float right, float top, float bottom, float near, float far)
+mat4_t create_transform_matrix_4x4(vec3_t translate, vec3_t rotate, vec3_t scale)
+{
+    mat4_t transform_matrix = {0.0f};
+    transform_matrix.data[15] = 1.0f;
+
+    //translate
+
+    if (translate != (vec3_t){0.0f, 0.0f, 0.0f})
+    {
+        transform_matrix.data[3] = translate.x;
+        transform_matrix.data[7] = translate.y;
+        transform_matrix.data[11] = translate.z;
+    }
+
+    //rotate
+
+    if (rotate != (vec3_t){0.0f, 0.0f, 0.0f})
+    {
+        float cx = cosf(rotate.x);
+        float sx = sinf(rotate.x);
+
+        float cy = cosf(rotate.y);
+        float sy = sinf(rotate.y);
+
+        float cz = cosf(rotate.z);
+        float sz = sinf(rotate.z);
+
+        transform_matrix.data[0] = cy*cz;               transform_matrix.data[1] = -cy*sz;              transform_matrix.data[2] = sy;
+        transform_matrix.data[4] = sx*sy*cz + cx*sz;    transform_matrix.data[5] = -sx*sy*sz + cx*cz;   transform_matrix.data[6] = -sx*cy;
+        transform_matrix.data[8] = -cx*sy*cz + sx*sz;   transform_matrix.data[9] = cx*sy*sz + sx*cz;    transform_matrix.data[10] = cx*cy;
+    }
+
+    //scale
+
+    if (scale != (vec3_t){1.0f, 1.0f, 1.0f})
+    {
+        transform_matrix.data[0] *= scale.x;    transform_matrix.data[1] *= scale.y;    transform_matrix.data[2] *= scale.z;
+        transform_matrix.data[4] *= scale.x;    transform_matrix.data[5] *= scale.y;    transform_matrix.data[6] *= scale.z;
+        transform_matrix.data[8] *= scale.x;    transform_matrix.data[9] *= scale.y;    transform_matrix.data[10] *= scale.z;
+    }
+    
+    return transform_matrix;
+}
+
+mat4_t create_orthographic_matrix_4x4(float left, float right, float top, float bottom, float near, float far)
 {
     mat4_t matrix = {0.0f};
 
@@ -39,7 +86,7 @@ mat4_t orthographic(float left, float right, float top, float bottom, float near
     return matrix;
 }
 
-mat4_t perspective(float fov, float aspect, float near, float far)
+mat4_t create_perspective_matrix_4x4(float fov, float aspect, float near, float far)
 {
     mat4_t matrix = {0.0f};
 
@@ -54,7 +101,7 @@ mat4_t perspective(float fov, float aspect, float near, float far)
     return matrix;
 }
 
-mat4_t look_at(vec3_t pos, vec3_t right, vec3_t up, vec3_t front)
+mat4_t create_look_at_matrix_4x4(vec3_t pos, vec3_t right, vec3_t up, vec3_t front)
 {
     mat4_t matrix = {0.0f};
 

@@ -60,23 +60,18 @@ int main(int argc, char* argv[])
 
     poly = read_obj("./assets/yememi.obj");
 
-    mat4_t proj = perspective(deg_to_rad(90.0f), 1.0f, 0.1f, 100.0f);
-    mat4_t view = identity_matrix_4x4();
-    view = translate_matrix_4x4(view, (vec3_t){0.0f, 1.0f, -4.0f});
+    mat4_t proj = create_perspective_matrix_4x4(deg_to_rad(90.0f), 1.0f, 0.1f, 100.0f);
+    mat4_t view = create_transform_matrix_4x4((vec3_t){0.0f, 1.0f, -4.0f}, (vec3_t){0.0f, 0.0f, 0.0f}, (vec3_t){1.0f, 1.0f, 1.0f});
     cam = multiply_matrix_4x4(proj, view);
 
     shadow_buffer = create_frame(128, 128, FRAME_DEPTH_BUFFER);
 
-    mat4_t light_proj = orthographic(-4.0f, 4.0f, 4.0f, -4.0f, 0.1f, 100.0f);
-    mat4_t light_view = identity_matrix_4x4();
-    light_view = translate_matrix_4x4(light_view, (vec3_t){0.0f, 0.0f, -8.0f});
-    light_view = rotate_with_deg_matrix_4x4(light_view, (vec3_t){-45.0, -45.0, 0.0});
+    mat4_t light_proj = create_orthographic_matrix_4x4(-4.0f, 4.0f, 4.0f, -4.0f, 0.1f, 100.0f);
+    mat4_t light_view = create_transform_matrix_4x4((vec3_t){0.0f, 0.0f, -8.0f}, (vec3_t){deg_to_rad(-45.0f), deg_to_rad(-45.0f), 0.0f}, (vec3_t){1.0f, 1.0f, 1.0f});
 
     light_cam = multiply_matrix_4x4(light_proj, light_view);
 
-    mat4_t model_poly = identity_matrix_4x4();
-    model_poly = rotate_with_deg_matrix_4x4(model_poly, (vec3_t){180.0, 180.0, 0.0});
-    model_poly = scale_matrix_4x4(model_poly, (vec3_t){2.0f, 2.0f, 2.0f});
+    mat4_t model_poly = create_transform_matrix_4x4((vec3_t){0.0f, 0.0f, 0.0f}, (vec3_t){deg_to_rad(180.0f), deg_to_rad(180.0f), 0.0f}, (vec3_t){2.0f, 2.0f, 2.0f});
 
     clear_terminal();
     set_cursor_color(cyan);
@@ -99,7 +94,7 @@ int main(int argc, char* argv[])
             }
         }
 
-        model_poly = rotate_with_deg_matrix_4x4(model_poly, (vec3_t){0.0f, 0.1f, 0.0f});
+        model_poly = rotate_matrix_4x4(model_poly, (vec3_t){0.0f, deg_to_rad(0.1f), 0.0f});
 
         clear_frame(frame_buffer, ' ');
         clear_frame(shadow_buffer, '\0');

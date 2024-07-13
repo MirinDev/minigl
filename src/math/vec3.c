@@ -74,3 +74,8 @@ vec3_t normalize_vector_3(vec3_t vector)
 
     return divide_vector_3_float(vector, lenght);
 }
+
+float dot_vector_3(vec3_t a, vec3_t b)
+{
+    return a.x * b.x + a.y * b.y + a.z * b.z;
+}

@@ -2,14 +2,12 @@
 #include <objread.h>
 #include <stdbool.h>
 
-frame_t* frame_buffer;
-
 poly_t* poly;
-poly_t* cube;
 
 frame_t* shadow_buffer;
 mat4_t light_cam;
 
+frame_t* frame_buffer;
 mat4_t cam;
 mat4_t model;
 
@@ -53,28 +51,29 @@ int main(int argc, char* argv[])
 {
     init_terminal();
     hide_cursor();
-
     set_terminal_title("generic title test");
-
-    frame_buffer = create_frame(64 * 4, 32 * 4, FRAME_CHARACTER_BUFFER | FRAME_DEPTH_BUFFER);
+    clear_terminal();
+    set_cursor_color(cyan);
 
     poly = read_obj("./assets/yememi.obj");
 
+    frame_buffer = create_frame(64 * 4, 32 * 4, FRAME_CHARACTER_BUFFER | FRAME_DEPTH_BUFFER);
+
+    vec3_t cam_pos = {0.0f, -1.0f, -4.0f};
+    vec3_t cam_front = {0.0f, 0.0f, 1.0f};
+    vec3_t cam_up = {0.0f, 1.0f, 0.0f};
+
     mat4_t proj = create_perspective_matrix_4x4(deg_to_rad(90.0f), 1.0f, 0.1f, 100.0f);
-    mat4_t view = create_transform_matrix_4x4((vec3_t){0.0f, 1.0f, -4.0f}, (vec3_t){0.0f, 0.0f, 0.0f}, (vec3_t){1.0f, 1.0f, 1.0f});
+    mat4_t view = create_look_at_matrix_4x4(cam_pos, add_vector_3(cam_pos, cam_front), cam_up);
     cam = multiply_matrix_4x4(proj, view);
 
     shadow_buffer = create_frame(128, 128, FRAME_DEPTH_BUFFER);
 
     mat4_t light_proj = create_orthographic_matrix_4x4(-4.0f, 4.0f, 4.0f, -4.0f, 0.1f, 100.0f);
     mat4_t light_view = create_transform_matrix_4x4((vec3_t){0.0f, 0.0f, -8.0f}, (vec3_t){deg_to_rad(-45.0f), deg_to_rad(-45.0f), 0.0f}, (vec3_t){1.0f, 1.0f, 1.0f});
-
     light_cam = multiply_matrix_4x4(light_proj, light_view);
 
-    mat4_t model_poly = create_transform_matrix_4x4((vec3_t){0.0f, 0.0f, 0.0f}, (vec3_t){deg_to_rad(180.0f), deg_to_rad(180.0f), 0.0f}, (vec3_t){2.0f, 2.0f, 2.0f});
-
-    clear_terminal();
-    set_cursor_color(cyan);
+    model = create_transform_matrix_4x4((vec3_t){0.0f, 0.0f, 0.0f}, (vec3_t){deg_to_rad(180.0f), deg_to_rad(180.0f), 0.0f}, (vec3_t){2.0f, 2.0f, 2.0f});
 
     bool loop = true;
 
@@ -94,12 +93,11 @@ int main(int argc, char* argv[])
             }
         }
 
-        model_poly = rotate_matrix_4x4(model_poly, (vec3_t){0.0f, deg_to_rad(0.1f), 0.0f});
+        model = rotate_matrix_4x4(model, (vec3_t){0.0f, deg_to_rad(0.1f), 0.0f});
 
         clear_frame(frame_buffer, ' ');
-        clear_frame(shadow_buffer, '\0');
+        clear_frame(shadow_buffer, 0);
 
-        model = model_poly;
         render_poly(shadow_buffer, poly, v_shadow_shader, NULL);
         render_poly(frame_buffer, poly, v_shader, f_shader);
 

@@ -121,11 +121,6 @@ mat4_t rotate_with_deg_matrix_4x4(mat4_t matrix, vec3_t deg)
     return rotate_matrix_4x4(matrix, rad);
 }
 
-float deg_to_rad(float deg)
-{
-    return deg * ((float)M_PI / 180.0f);
-}
-
 void print_matrix_4x4(mat4_t matrix)
 {
     fprintf(stdout, "%.2f, %.2f, %.2f, %.2f\n%.2f, %.2f, %.2f, %.2f\n%.2f, %.2f, %.2f, %.2f\n%.2f, %.2f, %.2f, %.2f\n", 

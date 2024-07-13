@@ -4,9 +4,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <math.h>
 
 #include "vec3.h"
+#include "utils.h"
 
 typedef struct mat4_s 
 {

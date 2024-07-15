@@ -11,8 +11,8 @@
 
 typedef union triangle_3d_u
 {
-    struct{vec3_t v0, v1, v2;};
-    struct{vec3_t data[3];};
+    struct{vec4_t v0, v1, v2;};
+    struct{vec4_t data[3];};
 } triangle_3d_t;
 
 typedef enum CULLIN_FACE_e

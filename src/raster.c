@@ -12,15 +12,21 @@ CULLIN_FACE_t ACTUAL_CULLIN = CULLIN_FACE_NONE;
 
 void raster_triangle(frame_t* frame, triangle_3d_t tri, fragment_shader shader)
 {
-    int min_x = (int)clampf(minf(minf(tri.v0.x, tri.v1.x), tri.v2.x), 0, frame->width - 1);
-    int min_y = (int)clampf(minf(minf(tri.v0.y, tri.v1.y), tri.v2.y), 0, frame->height - 1);
+    float sx = (float)frame->width / 2;
+    float sy = (float)frame->height / 2;
 
-    int max_x = (int)clampf(maxf(maxf(tri.v0.x, tri.v1.x), tri.v2.x), 0, frame->width - 1);
-    int max_y = (int)clampf(maxf(maxf(tri.v0.y, tri.v1.y), tri.v2.y), 0, frame->height - 1);
+    vec2_t v0 = {(tri.v0.x / tri.v0.w + 1.0f) * sx, (tri.v0.y / tri.v0.w + 1.0f) * sy};
+    float z0 = tri.v0.z / tri.v0.w;
+    vec2_t v1 = {(tri.v1.x / tri.v1.w + 1.0f) * sx, (tri.v1.y / tri.v1.w + 1.0f) * sy};
+    float z1 = tri.v1.z / tri.v1.w;
+    vec2_t v2 = {(tri.v2.x / tri.v2.w + 1.0f) * sx, (tri.v2.y / tri.v2.w + 1.0f) * sy};
+    float z2 = tri.v2.z / tri.v2.w;
 
-    vec2_t v0 = {tri.v0.x, tri.v0.y};
-    vec2_t v1 = {tri.v1.x, tri.v1.y};
-    vec2_t v2 = {tri.v2.x, tri.v2.y};
+    int min_x = (int)clampf(minf(minf(v0.x, v1.x), v2.x), 0, frame->width - 1);
+    int min_y = (int)clampf(minf(minf(v0.y, v1.y), v2.y), 0, frame->height - 1);
+
+    int max_x = (int)clampf(maxf(maxf(v0.x, v1.x), v2.x), 0, frame->width - 1);
+    int max_y = (int)clampf(maxf(maxf(v0.y, v1.y), v2.y), 0, frame->height - 1);
     
     float abc = edge_cross(v0, v1, v2);
 
@@ -66,13 +72,26 @@ void raster_triangle(frame_t* frame, triangle_3d_t tri, fragment_shader shader)
             {
                 if (frame->z_data != NULL)
                 {
-                    float z = tri.v0.z * alpha + tri.v1.z * beta + tri.v2.z * gama;
+                    float z = z0 * alpha + z1 * beta + z2 * gama;
 
                     if (z > -1.0f && z < frame->z_data[y * frame->width + x])
+                    {
                         frame->z_data[y * frame->width + x] = z;
-                }
+                        
+                        if (frame->data != NULL)
+                        {
+                            float w = alpha / tri.v0.w + beta / tri.v1.w + gama / tri.v2.w;
+                            alpha /= (tri.v0.w * w);
+                            beta /= (tri.v1.w * w);
+                            gama /= (tri.v2.w * w);
 
-                if (frame->data != NULL)
+                            char ch = ' ';
+                            shader(&ch, alpha, beta, gama);
+                            frame->data[y * frame->width + x] = ch;
+                        }
+                    }
+                }
+                else if (frame->data != NULL)
                 {
                     char ch = ' ';
                     shader(&ch, alpha, beta, gama);

@@ -23,10 +23,10 @@ void delete_frame(frame_t* frame)
 {
     if (frame == NULL) return;
 
-    if (frame->data)
+    if (frame->data != NULL)
         free(frame->data);
     
-    if (frame->z_data)
+    if (frame->z_data != NULL)
         free(frame->z_data);
 
     free(frame);
@@ -36,13 +36,13 @@ void clear_frame(frame_t* frame, char ch)
 {
     if (frame == NULL) return;
 
-    if (frame->data)
+    if (frame->data != NULL)
         memset(frame->data, ch, frame->width * frame->height * sizeof(char));
     
-    if (frame->z_data)
+    if (frame->z_data != NULL)
     {
         for (int i = 0; i < frame->width * frame->height; i++)
-        frame->z_data[i] = 1.0f;
+            frame->z_data[i] = 1.0f;
     }
 }
 

@@ -60,6 +60,7 @@ int main(int argc, char* argv[])
     frame_buffer = create_frame(64 * 2, 32 * 2, FRAME_CHARACTER_BUFFER | FRAME_DEPTH_BUFFER);
 
     vec3_t cam_pos = {0.0f, -3.0f, -4.0f};
+    //vec3_t cam_pos = {0.0f, -3.0f, -8.0f};
     vec3_t cam_front = {0.0f, 0.0f, 1.0f};
     vec3_t cam_up = {0.0f, 1.0f, 0.0f};
 
@@ -74,8 +75,10 @@ int main(int argc, char* argv[])
     light_cam = multiply_matrix_4x4(light_proj, light_view);
 
     model = create_transform_matrix_4x4((vec3_t){0.0f, 0.0f, 0.0f}, (vec3_t){deg_to_rad(180.0f), 0.0f, 0.0f}, (vec3_t){2.0f, 2.0f, 2.0f});
+    //model = create_transform_matrix_4x4((vec3_t){0.0f, 0.0f, 0.0f}, (vec3_t){deg_to_rad(180.0f), 0.0f, 0.0f}, (vec3_t){0.1f, 0.1f, 0.1f});
 
     bool loop = true;
+    ACTUAL_CULLIN = CULLIN_FACE_BACK;
 
     while (loop)
     {
@@ -96,11 +99,9 @@ int main(int argc, char* argv[])
         model = rotate_matrix_4x4(model, (vec3_t){0.0f, deg_to_rad(0.1f), 0.0f});
 
         clear_frame(shadow_buffer, 0);
-        ACTUAL_CULLIN = CULLIN_FACE_FRONT;
         render_poly(shadow_buffer, poly, v_shadow_shader, NULL);
 
         clear_frame(frame_buffer, ' ');
-        ACTUAL_CULLIN = CULLIN_FACE_BACK;
         render_poly(frame_buffer, poly, v_shader, f_shader);
 
         present_frame(frame_buffer);
